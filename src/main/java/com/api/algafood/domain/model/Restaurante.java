@@ -33,6 +33,6 @@ public class Restaurante {
 	private Cozinha cozinha;
 	
 	@ManyToOne
-	@JoinColumn(name="idformapagamento", nullable=false)
+	@JoinColumn(name="idforma_pagamento", nullable=false)
 	private FormaPagamento formaPagamento;
 }
