@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-@JsonRootName("gastronomia") //muda o nome do root quando retornar em formato xml
+//@JsonRootName("gastronomia") //muda o nome do root quando retornar em formato xml
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
@@ -24,7 +24,7 @@ public class Cozinha {
 	private Long id;
 	
 	//@JsonIgnore //remover propriedade da representação. Não aparecerá no retorno
-	@JsonProperty("titulo") //mudar o nome na representação do payload desse objeto 
+	//@JsonProperty("titulo") //mudar o nome na representação do payload desse objeto 
 	@Column(nullable = false)
 	private String nome;
 
