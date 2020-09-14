@@ -35,12 +35,12 @@ public class CozinhaController {
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE) //aceita apenas retornar get em formato json.
 	public List<Cozinha> Listar(){
-		return cozinhaRepository.listar();
+		return cozinhaRepository.findAll();
 	}
 	
 	@GetMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
-		var cozinha = cozinhaRepository.buscar(cozinhaId);
+		var cozinha = cozinhaRepository.findById(cozinhaId).get();
 		if (cozinha != null) {
 			return ResponseEntity.ok(cozinha);
 		}
@@ -57,12 +57,12 @@ public class CozinhaController {
 	@PutMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
 		
-		var cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
+		var cozinhaAtual = cozinhaRepository.findById(cozinhaId);
 		
 		if(cozinhaAtual != null) {
 			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-			cadastroCozinhaService.salvar(cozinhaAtual);
-			return ResponseEntity.ok(cozinhaAtual);
+			cadastroCozinhaService.salvar(cozinhaAtual.get());
+			return ResponseEntity.ok(cozinhaAtual.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
