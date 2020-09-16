@@ -39,14 +39,14 @@ public class RestauranteController {
 	
 	@GetMapping
 	public List<Restaurante> Listar(){
-		return restauranteRepository.listar();
+		return restauranteRepository.findAll();
 	}
 	
 	@GetMapping("/{restauranteId}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
-		var restaurante = restauranteRepository.buscar(restauranteId);
-		if (restaurante != null) {
-			return ResponseEntity.ok(restaurante);
+		var restaurante = restauranteRepository.findById(restauranteId);
+		if (restaurante.isPresent()) {
+			return ResponseEntity.ok(restaurante.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -55,11 +55,11 @@ public class RestauranteController {
 	@PutMapping("/{restauranteId}")
 	public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
 		try {
-			var restauranteAtual = restauranteRepository.buscar(restauranteId);
+			var restauranteAtual = restauranteRepository.findById(restauranteId);
 		
-			if(restauranteAtual != null) {
-				BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-				cadastroRestauranteService.salvar(restauranteAtual);
+			if(restauranteAtual.isPresent()) {
+				BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id");
+				cadastroRestauranteService.salvar(restauranteAtual.get());
 				return ResponseEntity.ok(restauranteAtual);
 			}
 			return ResponseEntity.notFound().build();
@@ -71,14 +71,14 @@ public class RestauranteController {
 	@PatchMapping("/{restauranteId}")
 	public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId, 
 			@RequestBody Map<String, Object> campos){
-		var restauranteAtual = restauranteRepository.buscar(restauranteId);
+		var restauranteAtual = restauranteRepository.findById(restauranteId);
 		
-		if(restauranteAtual == null) {
+		if(restauranteAtual.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		merge(campos, restauranteAtual);
-		return atualizar(restauranteId, restauranteAtual);
+		merge(campos, restauranteAtual.get());
+		return atualizar(restauranteId, restauranteAtual.get());
 	
 	}
 
