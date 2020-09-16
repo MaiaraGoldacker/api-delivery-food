@@ -138,4 +138,10 @@ public class RestauranteController {
 	public List<Restaurante> consultarPorNome(String nome, Long cozinhaId){
 		return restauranteRepository.consultarPorNome(nome, cozinhaId);
 	}
+	
+	
+	@GetMapping("/consultarPorNomeFrete")
+	public List<Restaurante> consultarPorNomeFrete(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal){
+		return restauranteRepository.find(nome, taxaInicial, taxaFinal);
+	}
 }
