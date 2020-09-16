@@ -133,4 +133,9 @@ public class RestauranteController {
 	public int restauranteCountCozinha(Long cozinhaId){
 		return restauranteRepository.countByCozinhaId(cozinhaId);
 	}
+		
+	@GetMapping("/consultarPorNome")
+	public List<Restaurante> consultarPorNome(String nome, Long cozinhaId){
+		return restauranteRepository.consultarPorNome(nome, cozinhaId);
+	}
 }
