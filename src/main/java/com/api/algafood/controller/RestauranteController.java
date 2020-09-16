@@ -1,6 +1,7 @@
 package com.api.algafood.controller;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -115,5 +116,21 @@ public class RestauranteController {
 		} catch(EntidadeEmUsoException ex) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
+	}
+	
+	@GetMapping("/taxa")
+	public List<Restaurante> restaurantesPorTaxaFrete(
+			BigDecimal taxaInicial, BigDecimal taxaFinal){
+		return restauranteRepository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
+	}
+	
+	@GetMapping("/existeNome")
+	public boolean restaurantesExistsNome(String nome){
+		return restauranteRepository.existsByNome(nome);
+	}
+	
+	@GetMapping("/countCozinhas")
+	public int restauranteCountCozinha(Long cozinhaId){
+		return restauranteRepository.countByCozinhaId(cozinhaId);
 	}
 }

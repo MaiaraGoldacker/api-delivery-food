@@ -48,6 +48,11 @@ public class CozinhaController {
 		return ResponseEntity.notFound().build();
 	}
 	
+	@GetMapping("/nome/{nome}")
+	public List<Cozinha> cozinhasPorNome(@PathVariable String nome){
+		return cozinhaRepository.findByNomeContaining(nome);
+	}
+	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha) {
