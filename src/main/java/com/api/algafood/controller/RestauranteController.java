@@ -144,4 +144,10 @@ public class RestauranteController {
 	public List<Restaurante> consultarPorNomeFrete(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal){
 		return restauranteRepository.find(nome, taxaInicial, taxaFinal);
 	}
+	
+	@GetMapping("/consultarPorFreteGratis")
+	public List<Restaurante> consultarPorFreteGratis(String nome){
+		return restauranteRepository.findComFreteGratis(nome);
+				//.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
+	}
 }
