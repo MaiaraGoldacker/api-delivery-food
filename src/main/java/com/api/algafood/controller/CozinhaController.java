@@ -1,6 +1,7 @@
 package com.api.algafood.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,11 @@ public class CozinhaController {
 		} catch(EntidadeEmUsoException ex) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
+	}
+	
+	@GetMapping("/primeiro")
+	public Optional<Cozinha> consultarPrimeiraCozinha(){
+		return cozinhaRepository.buscarPrimeiro();
 	}
 }
 
