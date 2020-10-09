@@ -1,10 +1,12 @@
 package com.api.algafood.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,8 +36,22 @@ public class Restaurante {
 	
 	private String nome;
 	
+	@JsonIgnore
+	@CreationTimestamp //adiciona data e hora atual quando propriedade for criada a 1ª vez
+	@Column(nullable = false, columnDefinition = "datetime") //columnDefinition= adiciona data sem precisão de milissegundos
+	private LocalDateTime dataCadastro;
+	
+	@JsonIgnore
+	@UpdateTimestamp //adiciona data e hora atual quando propriedade for atualizada
+	@Column(nullable = false)
+	private LocalDateTime dataAtualizacao;
+	
 	@Column(nullable=false) //espeficica coluna notnull no banco
 	private BigDecimal taxaFrete;
+	
+	@JsonIgnore
+	@Embedded
+	private Endereco endereco;
 	
 	@ManyToOne
 	@JoinColumn(name="idcozinha", nullable=false)
