@@ -10,7 +10,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,10 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.api.algafood.domain.exception.EntidadeEmUsoException;
-import com.api.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.api.algafood.domain.model.Restaurante;
 import com.api.algafood.domain.repository.RestauranteRepository;
 import com.api.algafood.domain.service.CadastroRestauranteService;
@@ -45,40 +42,28 @@ public class RestauranteController {
 	}
 	
 	@GetMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
-		var restaurante = restauranteRepository.findById(restauranteId);
-		if (restaurante.isPresent()) {
-			return ResponseEntity.ok(restaurante.get());
-		}
-		return ResponseEntity.notFound().build();
+	public Restaurante buscar(@PathVariable Long restauranteId) {
+		return cadastroRestauranteService.buscarOuFalhar(restauranteId);
 	}
 	
-	
 	@PutMapping("/{restauranteId}")
-	public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
-		try {
-			var restauranteAtual = restauranteRepository.findById(restauranteId);
-		
-			if(restauranteAtual.isPresent()) {
-				BeanUtils.copyProperties(restaurante, restauranteAtual.get(),
+	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
+		var restauranteAtual =  cadastroRestauranteService.buscarOuFalhar(restauranteId);
+			
+		BeanUtils.copyProperties(restaurante, restauranteAtual,
 						"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 				
-				cadastroRestauranteService.salvar(restauranteAtual.get());
-				return ResponseEntity.ok(restauranteAtual);
-			}
-			return ResponseEntity.notFound().build();
-		}catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+		return cadastroRestauranteService.salvar(restauranteAtual);
 	}
 	
 	@PatchMapping("/{restauranteId}")
-	public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId, 
+	public Restaurante atualizarParcial(@PathVariable Long restauranteId, 
 			@RequestBody Map<String, Object> campos){
 		var restauranteAtual = restauranteRepository.findById(restauranteId);
 		
 		if(restauranteAtual.isEmpty()) {
-			return ResponseEntity.notFound().build();
+			return null;
+			//return ResponseEntity.notFound().build();
 		}
 		
 		merge(campos, restauranteAtual.get());
@@ -100,25 +85,15 @@ public class RestauranteController {
 	}
 		
 	@PostMapping
-	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
-		try {
-			restaurante = cadastroRestauranteService.salvar(restaurante);
-			return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
-		}catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+	@ResponseStatus(HttpStatus.CREATED)
+	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+		return cadastroRestauranteService.salvar(restaurante);
 	}
 	
 	@DeleteMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> remover(@PathVariable Long restauranteId){
-		try {
-			cadastroRestauranteService.excluir(restauranteId);
-			return ResponseEntity.noContent().build();
-		} catch(EntidadeNaoEncontradaException ex) {
-			return ResponseEntity.notFound().build();
-		} catch(EntidadeEmUsoException ex) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long restauranteId){
+		cadastroRestauranteService.excluir(restauranteId);
 	}
 	
 	@GetMapping("/taxa")
