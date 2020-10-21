@@ -21,12 +21,11 @@ public class CadastroRestauranteService {
 	private RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	private CozinhaRepository cozinhaRepository;
+	private CadastroCozinhaService cadastroCozinhaService;
 	
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
-		var cozinha = cozinhaRepository.findById(cozinhaId).orElseThrow(()->new EntidadeNaoEncontradaException(
-				String.format("Não existe cadastro de cozinha com o código %d", cozinhaId))); 
+		var cozinha =  cadastroCozinhaService.buscarOuFalhar(cozinhaId); 
 		
 		restaurante.setCozinha(cozinha);
 		return restauranteRepository.save(restaurante);
