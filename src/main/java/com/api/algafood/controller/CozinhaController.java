@@ -56,6 +56,7 @@ public class CozinhaController {
 		var cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
 		
 		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+		
 		return cadastroCozinhaService.salvar(cozinhaAtual);
 	}
 	
