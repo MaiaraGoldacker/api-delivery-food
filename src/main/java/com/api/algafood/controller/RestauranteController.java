@@ -45,15 +45,16 @@ public class RestauranteController {
 	
 	@PutMapping("/{restauranteId}")
 	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
-		var restauranteAtual =  cadastroRestauranteService.buscarOuFalhar(restauranteId);
+		
+		try {
+			var restauranteAtual =  cadastroRestauranteService.buscarOuFalhar(restauranteId);
 			
-		BeanUtils.copyProperties(restaurante, restauranteAtual,
+			BeanUtils.copyProperties(restaurante, restauranteAtual,
 						"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 				
-		try {
 			return cadastroRestauranteService.salvar(restauranteAtual);
 		} catch(CozinhaNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage());
+			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 	
@@ -91,7 +92,7 @@ public class RestauranteController {
 		try {
 			return cadastroRestauranteService.salvar(restaurante);
 		} catch(CozinhaNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage());
+			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 	
