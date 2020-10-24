@@ -8,6 +8,7 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.api.algafood.domain.exception.EntidadeEmUsoException;
 import com.api.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.api.algafood.domain.exception.NegocioException;
 
@@ -32,6 +33,17 @@ public class ApiExceptionHandler {
 				.build();
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problema);
+	}
+	
+	
+	@ExceptionHandler(EntidadeEmUsoException.class)
+	public ResponseEntity<?> tratarEntidadeEmUsoException(EntidadeEmUsoException e){
+		Problema problema = Problema.builder()
+				.dataHora(LocalDateTime.now())
+				.mensagem(e.getMessage())
+				.build();
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(problema);
 	}
 	
 	//Não suporta formato XML - é possível customizar tratamentos de exceptions internas
