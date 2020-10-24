@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.api.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.api.algafood.domain.exception.NegocioException;
 import com.api.algafood.domain.model.Cidade;
@@ -68,4 +69,5 @@ public class CidadeController {
 	public void remover(@PathVariable Long cidadeId){
 		cadastroCidadeService.excluir(cidadeId);	
 	}
+	
 }
