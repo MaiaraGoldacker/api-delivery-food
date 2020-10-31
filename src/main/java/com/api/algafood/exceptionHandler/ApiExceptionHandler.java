@@ -1,5 +1,6 @@
 package com.api.algafood.exceptionHandler;
 
+import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.api.algafood.domain.exception.EntidadeEmUsoException;
 import com.api.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.api.algafood.domain.exception.NegocioException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 @ControllerAdvice //Diz que as exceptions de todo  o projeto serão tratadas por essa anotação
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
@@ -33,8 +38,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		if (rootCause instanceof InvalidFormatException) {
 			return handleInvalidFormatException((InvalidFormatException)rootCause, headers, status, request);
-		}
-	
+		} else if (rootCause instanceof PropertyBindingException) {
+			return handlePropertyBindingException((PropertyBindingException)rootCause, headers, status, request);
+		} 
+
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
 		String detail = "O corpo da requisição está inválido. Verifique a sintaxe";
 		
@@ -43,14 +50,30 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
 	
+	private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		String path = joinPath(ex.getPath());
+
+		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+		String detail = String.format("Propriedade informada '%s' não existe.", path);
+		
+		Problem problema = createProblemBuilder(status, problemType, detail).build();
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+	
+	private String joinPath(List<Reference> references) {
+		return references.stream()
+				  .map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
+	}
+	
 	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
 		
 		//pegando lista e concatenando elementos dentro dela separados por .
-		String path = ex.getPath().stream()
-								  .map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
+		String path = joinPath(ex.getPath());
 		
 		String detail = String.format("A propriedade '%s' recebeu o valor '%s' que é de um tipo inválido."
 				+ "Corrija e informe um valor compatível com o tipo '%s'"
