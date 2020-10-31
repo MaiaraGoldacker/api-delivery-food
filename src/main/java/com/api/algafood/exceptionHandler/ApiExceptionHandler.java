@@ -1,8 +1,14 @@
 package com.api.algafood.exceptionHandler;
 
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -11,10 +17,49 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.api.algafood.domain.exception.EntidadeEmUsoException;
 import com.api.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.api.algafood.domain.exception.NegocioException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 @ControllerAdvice //Diz que as exceptions de todo  o projeto serão tratadas por essa anotação
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	
+	
+	//capturar causa de erro de sintaxe no arquivo json
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		//retorna a causa raiz do problema
+		Throwable rootCause = ExceptionUtils.getRootCause(ex);
+		
+		if (rootCause instanceof InvalidFormatException) {
+			return handleInvalidFormatException((InvalidFormatException)rootCause, headers, status, request);
+		}
+	
+		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+		String detail = "O corpo da requisição está inválido. Verifique a sintaxe";
+		
+		Problem problema = createProblemBuilder(status, problemType, detail).build();
+		
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+	
+	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+		
+		//pegando lista e concatenando elementos dentro dela separados por .
+		String path = ex.getPath().stream()
+								  .map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
+		
+		String detail = String.format("A propriedade '%s' recebeu o valor '%s' que é de um tipo inválido."
+				+ "Corrija e informe um valor compatível com o tipo '%s'"
+				, path, ex.getValue(), ex.getTargetType().getSimpleName());
+		
+		Problem problema = createProblemBuilder(status, problemType, detail).build();
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException ex, WebRequest request){
 		
@@ -62,7 +107,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 					.title(status.getReasonPhrase())
 					.status(status.value())
 					.build();
-		} else {
+		} else if (body instanceof String){
 			body = Problem.builder()
 					.title((String)body)
 					.status(status.value())
