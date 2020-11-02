@@ -1,32 +1,30 @@
 package com.api.algafood.exceptionHandler;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.api.algafood.domain.exception.EntidadeEmUsoException;
 import com.api.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.api.algafood.domain.exception.NegocioException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
-import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 @ControllerAdvice //Diz que as exceptions de todo  o projeto serão tratadas por essa anotação
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
-	
 	
 	//capturar causa de erro de sintaxe no arquivo json
 	@Override
@@ -50,6 +48,66 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
 	
+	
+	//MethodArgumentTypeMismatchException
+	
+	@Override
+	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		
+		if (ex instanceof MethodArgumentTypeMismatchException) {
+	        return handleMethodArgumentTypeMismatch(
+	                (MethodArgumentTypeMismatchException) ex, headers, status, request);
+	    }
+
+		return super.handleTypeMismatch(ex, headers, status, request);
+	}
+	
+	
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+
+		if (ex instanceof NoHandlerFoundException) {
+	        return handleMethodNoHandlerFoundException(
+	                (NoHandlerFoundException) ex, headers, status, request);
+	    }
+		
+		return super.handleNoHandlerFoundException(ex, headers, status, request);
+	}
+	
+	
+	private ResponseEntity<Object> handleMethodNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		
+		String recurso = ex.getRequestURL();
+		
+		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
+		String detail = String.format("O recurso '%s', que você tentou acessar é inexistente", recurso);
+		
+		Problem problema = createProblemBuilder(status, problemType, detail).build();
+		
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+
+
+	private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		String typeRequired = ex.getRequiredType().getSimpleName();
+		Object urlInformada = ex.getValue();
+		String url = ex.getName();
+		
+		ProblemType problemType = ProblemType.PARAMETRO_INVALIDO;
+		String detail = String.format("O parâmetro de URL '%s' recebeu o valor de '%s', que é um tipo inválido."
+				+ "Corrija e informe um valor compatível com o tipo %s", url, urlInformada, typeRequired);
+		
+		Problem problema = createProblemBuilder(status, problemType, detail).build();
+		
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+
+
 	private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
@@ -87,7 +145,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	public ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException ex, WebRequest request){
 		
 		HttpStatus status = HttpStatus.NOT_FOUND;
-		ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+		ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
 		String detail = ex.getMessage();
 		
 		Problem problema = createProblemBuilder(status, problemType, detail).build();
