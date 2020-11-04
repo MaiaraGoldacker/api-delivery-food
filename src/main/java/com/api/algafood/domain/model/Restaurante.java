@@ -22,6 +22,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.api.algafood.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,6 +32,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -44,7 +46,7 @@ public class Restaurante {
 	
 	//@NotNull  não pode ser null
 	//@NotEmpty não pode ser vazio ou null
-	@NotBlank(groups =  Groups.CadastroRestaurante.class) //Não pode ser vazio, null, ou apenas espaços em branco
+	@NotBlank //Não pode ser vazio, null, ou apenas espaços em branco
  	private String nome;
 	
 	@JsonIgnore
@@ -59,7 +61,7 @@ public class Restaurante {
 	
 	
 	//@DecimalMin("1") //valor minimo deve ser zero.
-	@PositiveOrZero(groups =  Groups.CadastroRestaurante.class) //precisa ser um valor positivo ou zero
+	@PositiveOrZero //precisa ser um valor positivo ou zero
  	@Column(name = "taxa_frete",  nullable=false) //especifica coluna notnull no banco
 	private BigDecimal taxaFrete;
 	
@@ -68,7 +70,8 @@ public class Restaurante {
 	private Endereco endereco;
 	
 	@Valid
-	@NotNull(groups =  Groups.CadastroRestaurante.class)
+	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
+	@NotNull
 	@ManyToOne//(fetch = FetchType.LAZY)
 	@JoinColumn(name="cozinha_id", nullable = false)
 	private Cozinha cozinha;
