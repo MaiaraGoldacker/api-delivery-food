@@ -20,11 +20,17 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.api.algafood.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -36,27 +42,33 @@ public class Restaurante {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
-	private String nome;
+	//@NotNull  não pode ser null
+	//@NotEmpty não pode ser vazio ou null
+	@NotBlank(groups =  Groups.CadastroRestaurante.class) //Não pode ser vazio, null, ou apenas espaços em branco
+ 	private String nome;
 	
 	@JsonIgnore
 	@CreationTimestamp //adiciona data e hora atual quando propriedade for criada a 1ª vez
-	@Column(nullable = false, columnDefinition = "datetime") //columnDefinition= adiciona data sem precisão de milissegundos
+	@Column(name = "data_cadastro", nullable = false, columnDefinition = "datetime") //columnDefinition= adiciona data sem precisão de milissegundos
 	private LocalDateTime dataCadastro;
 	
 	@JsonIgnore
 	@UpdateTimestamp //adiciona data e hora atual quando propriedade for atualizada
-	@Column(nullable = false)
+	@Column(name = "data_atualizacao", nullable = false)
 	private LocalDateTime dataAtualizacao;
 	
-	@Column(nullable=false) //espeficica coluna notnull no banco
+	
+	//@DecimalMin("1") //valor minimo deve ser zero.
+	@PositiveOrZero(groups =  Groups.CadastroRestaurante.class) //precisa ser um valor positivo ou zero
+ 	@Column(name = "taxa_frete",  nullable=false) //especifica coluna notnull no banco
 	private BigDecimal taxaFrete;
 	
 	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 	
-
+	@Valid
+	@NotNull(groups =  Groups.CadastroRestaurante.class)
 	@ManyToOne//(fetch = FetchType.LAZY)
 	@JoinColumn(name="cozinha_id", nullable = false)
 	private Cozinha cozinha;
