@@ -61,6 +61,7 @@ public class Restaurante {
 	
 	
 	//@DecimalMin("1") //valor minimo deve ser zero.
+	@NotNull
 	@PositiveOrZero //precisa ser um valor positivo ou zero
  	@Column(name = "taxa_frete",  nullable=false) //especifica coluna notnull no banco
 	private BigDecimal taxaFrete;
