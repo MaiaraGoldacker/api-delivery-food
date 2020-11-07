@@ -20,19 +20,18 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.api.algafood.Groups;
+import com.api.algafood.validation.Groups;
+import com.api.algafood.validation.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.groups.ConvertGroup;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -62,7 +61,8 @@ public class Restaurante {
 	
 	//@DecimalMin("1") //valor minimo deve ser zero.
 	@NotNull
-	@PositiveOrZero //precisa ser um valor positivo ou zero
+	//@PositiveOrZero //precisa ser um valor positivo ou zero
+	@TaxaFrete
  	@Column(name = "taxa_frete",  nullable=false) //especifica coluna notnull no banco
 	private BigDecimal taxaFrete;
 	
@@ -73,8 +73,8 @@ public class Restaurante {
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@NotNull
-	@ManyToOne//(fetch = FetchType.LAZY)
-	@JoinColumn(name="cozinha_id", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
 	@JsonIgnore

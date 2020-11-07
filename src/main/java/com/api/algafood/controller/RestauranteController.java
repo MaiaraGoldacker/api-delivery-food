@@ -28,12 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.algafood.Groups;
 import com.api.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.api.algafood.domain.exception.NegocioException;
 import com.api.algafood.domain.model.Restaurante;
 import com.api.algafood.domain.repository.RestauranteRepository;
 import com.api.algafood.domain.service.CadastroRestauranteService;
+import com.api.algafood.validation.Groups;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
