@@ -22,6 +22,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.api.algafood.validation.Groups;
 import com.api.algafood.validation.TaxaFrete;
+import com.api.algafood.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
@@ -33,6 +34,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+                          //se aqui for zero        verifica descrição       descrição que será procurada
+@ValorZeroIncluiDescricao(valorField = "taxaFrete", descricaoField = "nome", descricaoObrigatoria = "FreteGratis")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
