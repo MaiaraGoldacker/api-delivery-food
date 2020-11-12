@@ -24,12 +24,12 @@ public class Problem {
 	//especialização
 	private String userMessage;
 	private LocalDateTime timestamp;
-	private List<Field> fields;
+	private List<Object> objects;
 
 	@Getter
 	@Setter
 	@Builder
-	public static class Field {
+	public static class Object {
 	
 		private String name;
 		private String userMessage;
