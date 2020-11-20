@@ -3,8 +3,6 @@ package com.api.algafood;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
 
-import org.flywaydb.core.Flyway;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.api.algafood.domain.model.Cozinha;
+import com.api.algafood.domain.repository.CozinhaRepository;
+import com.api.algafood.util.DatabaseCleaner;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -20,16 +23,17 @@ import io.restassured.http.ContentType;
 @RunWith(SpringRunner.class)
 //para levantar contexto do spring e deixar fazer uma requisição real
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("/application-test.properties")
 class CadastroCozinhaIT {
-	
-	//rodar o flyway antes da execução de cada teste, para termos certeza do estado
-	//da massa dos dados testados
-	@Autowired
-	private Flyway flyway;
-	
 
 	@LocalServerPort
 	private int port; 
+	
+	@Autowired
+	private DatabaseCleaner databaseCleaner;
+	
+	@Autowired
+	private CozinhaRepository cozinhaRepository;
 	
 	//preparação para os testes funcionarem
 	@BeforeEach
@@ -40,7 +44,8 @@ class CadastroCozinhaIT {
 		RestAssured.port = port;
 		RestAssured.basePath ="/cozinhas";
 		
-		flyway.migrate();
+		databaseCleaner.clearTables();
+		prepararDados();
 	}
 	
 	@Test
@@ -54,13 +59,13 @@ class CadastroCozinhaIT {
 	}
 	
 	@Test
-	public void deveConter4Cozinhas_quandoConsultarCozinhas() {
+	public void deveConter2Cozinhas_quandoConsultarCozinhas() {
 		given()
 			.accept(ContentType.JSON)
 		.when()
 				.get()
 			.then()
-			.body("", hasSize(4));
+			.body("", hasSize(2));
 			//.body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
 	}
 	
@@ -73,5 +78,16 @@ class CadastroCozinhaIT {
 			   .post()
 		.then()
 		.statusCode(HttpStatus.CREATED.value());
+	}
+	
+	//método que irá inserir registros responsáveis para validação dos testes
+	private void prepararDados() {
+		Cozinha cozinha1 = new Cozinha();
+		cozinha1.setNome("Tailandesa");
+		cozinhaRepository.save(cozinha1);
+		
+		Cozinha cozinha2 = new Cozinha();
+		cozinha2.setNome("Americana");
+		cozinhaRepository.save(cozinha2);
 	}
 }
