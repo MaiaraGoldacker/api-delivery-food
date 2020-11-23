@@ -1,6 +1,6 @@
 package com.api.algafood.exceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +60,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problema = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USER_FINAL)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
@@ -108,7 +108,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problema = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USER_FINAL)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
@@ -127,7 +127,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problema = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USER_FINAL)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
@@ -144,7 +144,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problema = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USER_FINAL)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
@@ -168,7 +168,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problema = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USER_FINAL)
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.build();
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
@@ -182,7 +182,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problema = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USER_FINAL)
-				.timestamp(LocalDateTime.now()).build();
+				.timestamp(OffsetDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
@@ -196,7 +196,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problema = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USER_FINAL)
-				.timestamp(LocalDateTime.now()).build();
+				.timestamp(OffsetDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
@@ -211,7 +211,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problem problema = createProblemBuilder(status, problemType, detail)
 				.userMessage(detail)
-				.timestamp(LocalDateTime.now()).build();
+				.timestamp(OffsetDateTime.now()).build();
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
@@ -225,13 +225,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 					
 					.title(status.getReasonPhrase())
 					.status(status.value())
-					.timestamp(LocalDateTime.now())
+					.timestamp(OffsetDateTime.now())
 					.build();
 		} else if (body instanceof String){
 			body = Problem.builder()
 					.title((String)body)
 					.status(status.value())
-					.timestamp(LocalDateTime.now())
+					.timestamp(OffsetDateTime.now())
 					.build();
 		}
 		
@@ -244,7 +244,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 								.type(problemType.getUri())
 								.title(problemType.getTitle())
 								.detail(detail)
-								.timestamp(LocalDateTime.now());
+								.timestamp(OffsetDateTime.now());
 	}
 	
 	//para tratar exceptions não tratadas!
@@ -258,7 +258,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 	    
 	    Problem problem = createProblemBuilder(status, problemType, detail)
 	    		.userMessage(MSG_ERRO_GENERICA_USER_FINAL)
-	    		.timestamp(LocalDateTime.now()).build();
+	    		.timestamp(OffsetDateTime.now()).build();
 
 	    return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	} 

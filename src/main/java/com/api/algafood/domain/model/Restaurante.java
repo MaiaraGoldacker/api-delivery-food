@@ -1,7 +1,7 @@
 package com.api.algafood.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,15 +53,15 @@ public class Restaurante {
 	@NotBlank //Não pode ser vazio, null, ou apenas espaços em branco
  	private String nome;
 	
-	@JsonIgnore
+	//@JsonIgnore
 	@CreationTimestamp //adiciona data e hora atual quando propriedade for criada a 1ª vez
 	@Column(name = "data_cadastro", nullable = false, columnDefinition = "datetime") //columnDefinition= adiciona data sem precisão de milissegundos
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 	
 	@JsonIgnore
 	@UpdateTimestamp //adiciona data e hora atual quando propriedade for atualizada
 	@Column(name = "data_atualizacao", nullable = false)
-	private LocalDateTime dataAtualizacao;
+	private OffsetDateTime dataAtualizacao;
 	
 	
 	//@DecimalMin("1") //valor minimo deve ser zero.
