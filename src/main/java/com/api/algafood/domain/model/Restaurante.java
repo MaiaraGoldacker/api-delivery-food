@@ -24,6 +24,8 @@ import com.api.algafood.validation.Groups;
 import com.api.algafood.validation.TaxaFrete;
 import com.api.algafood.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
@@ -73,6 +75,7 @@ public class Restaurante {
 	@Embedded
 	private Endereco endereco;
 	
+	@JsonIgnoreProperties(value = "nome", allowGetters = true) //vê propriedade de nome apenas quando consulta o arquivo json, e quando cadastra, ignora
 	@Valid
 	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@NotNull
