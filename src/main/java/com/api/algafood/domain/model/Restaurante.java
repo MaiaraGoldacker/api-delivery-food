@@ -48,12 +48,9 @@ public class Restaurante {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	//@NotNull  não pode ser null
-	//@NotEmpty não pode ser vazio ou null
-	@NotBlank //Não pode ser vazio, null, ou apenas espaços em branco
+	@Column(nullable=false)
  	private String nome;
 	
-	//@JsonIgnore
 	@CreationTimestamp //adiciona data e hora atual quando propriedade for criada a 1ª vez
 	@Column(name = "data_cadastro", nullable = false, columnDefinition = "datetime") //columnDefinition= adiciona data sem precisão de milissegundos
 	private OffsetDateTime dataCadastro;
@@ -63,34 +60,23 @@ public class Restaurante {
 	@Column(name = "data_atualizacao", nullable = false)
 	private OffsetDateTime dataAtualizacao;
 	
-	
-	//@DecimalMin("1") //valor minimo deve ser zero.
-	@NotNull
-	//@PositiveOrZero //precisa ser um valor positivo ou zero
-	@TaxaFrete
  	@Column(name = "taxa_frete",  nullable=false) //especifica coluna notnull no banco
 	private BigDecimal taxaFrete;
 	
-	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 	
-	@JsonIgnoreProperties(value = "nome", allowGetters = true) //vê propriedade de nome apenas quando consulta o arquivo json, e quando cadastra, ignora
-	@Valid
-	@ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
-	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento",
 	joinColumns= @JoinColumn(name = "restaurante_id"), //coluna da relação manytomany da classe q está sendo criada o relacionamento
 	inverseJoinColumns = @JoinColumn(name= "forma_pagamento_id")) //coluna da tabela inversa
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produto = new ArrayList<>();
 }
