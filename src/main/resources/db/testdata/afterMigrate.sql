@@ -42,11 +42,11 @@ insert into estado (id, nome) values (3, 'Rio Grande do Sul');
 insert into cidade (id, nome, estado_id) values (1, 'Blumenau', 1);
 insert into cidade (id, nome, estado_id) values (2, 'Curitiba', 2);
 
-insert into restaurante (nome, taxa_frete, cozinha_id, endereco_cep, endereco_numero, endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao) values ('aina', 10, 1, '89060300', '1750', 'casa', 'fidelis', 1, utc_timestamp, utc_timestamp);
-insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values ('Casarão', 8, 2, utc_timestamp, utc_timestamp);
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values (4, 'Java Steakhouse', 12, 3, utc_timestamp, utc_timestamp);
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values (5, 'Lanchonete do Tio Sam', 11, 4, utc_timestamp, utc_timestamp);
-insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao) values (6, 'Bar da Maria', 6, 4, utc_timestamp, utc_timestamp);
+insert into restaurante (nome, taxa_frete, cozinha_id, endereco_cep, endereco_numero, endereco_complemento, endereco_bairro, endereco_cidade_id, data_cadastro, data_atualizacao, ativo) values ('aina', 10, 1, '89060300', '1750', 'casa', 'fidelis', 1, utc_timestamp, utc_timestamp, true);
+insert into restaurante (nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo) values ('Casarão', 8, 2, utc_timestamp, utc_timestamp, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo) values (4, 'Java Steakhouse', 12, 3, utc_timestamp, utc_timestamp, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo) values (5, 'Lanchonete do Tio Sam', 11, 4, utc_timestamp, utc_timestamp, true);
+insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_atualizacao, ativo) values (6, 'Bar da Maria', 6, 4, utc_timestamp, utc_timestamp, true);
 
 insert into restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) values (1,1), (2,1);
 
