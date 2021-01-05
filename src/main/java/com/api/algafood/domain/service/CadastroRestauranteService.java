@@ -41,6 +41,7 @@ public class CadastroRestauranteService {
 		} catch(DataIntegrityViolationException ex) {
 			throw new EntidadeEmUsoException(
 					String.format(MSG_RESTAURANTE_EM_USO, restauranteId));
+			
 		}
 	}
 	
