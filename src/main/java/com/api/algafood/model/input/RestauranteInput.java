@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
+import com.api.algafood.model.EnderecoInput;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,4 +25,8 @@ public class RestauranteInput {
 	@Valid
 	@NotNull
 	private CozinhaIdInput cozinha;
+	
+	@Valid
+	@NotNull	
+	private EnderecoInput endereco;
 }

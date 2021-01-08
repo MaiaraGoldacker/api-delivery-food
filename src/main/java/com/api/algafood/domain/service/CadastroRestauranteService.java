@@ -22,12 +22,18 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 	
+	@Autowired
+	private CadastroCidadeService cadastroCidadeService;
+	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		var cozinha =  cadastroCozinhaService.buscarOuFalhar(cozinhaId); 
+		var cidade = cadastroCidadeService.buscarOuFalhar(restaurante.getEndereco().getCidade().getId());
 		
 		restaurante.setCozinha(cozinha);
+		restaurante.getEndereco().setCidade(cidade);
+		
 		return restauranteRepository.save(restaurante);
 	}
 	

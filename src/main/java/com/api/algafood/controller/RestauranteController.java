@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.algafood.assembler.RestauranteModelAssembler;
 import com.api.algafood.assembler.RestauranteModelDisassembler;
+import com.api.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.api.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.api.algafood.domain.exception.NegocioException;
 import com.api.algafood.domain.repository.RestauranteRepository;
@@ -58,14 +59,11 @@ public class RestauranteController {
 		
 		try {
 			var restauranteAtual =  cadastroRestauranteService.buscarOuFalhar(restauranteId);
-			
-			//BeanUtils.copyProperties(restaurante, restauranteAtual,
-			//			"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
-				
+						
 			restauranteModelDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 			
 			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(restauranteAtual));
-		} catch(CozinhaNaoEncontradaException e) {
+		} catch(CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
@@ -77,7 +75,7 @@ public class RestauranteController {
 		try {
 			return restauranteModelAssembler.toModel(cadastroRestauranteService.salvar(
 					restauranteModelDisassembler.toDomainModel(restauranteInput)));
-		} catch(CozinhaNaoEncontradaException e) {
+		} catch(CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
