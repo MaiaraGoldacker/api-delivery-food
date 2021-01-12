@@ -64,3 +64,5 @@ insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Esp
 
 insert into grupo (id, nome) values (1, 'Secretária');
 insert into grupo (id, nome) values (2, 'Diretor');
+
+insert into usuario (id, nome, email, senha, data_cadastro) values (1, 'Maiara', 'maiaragoldacker@gmail.com', '123', utc_timestamp);
