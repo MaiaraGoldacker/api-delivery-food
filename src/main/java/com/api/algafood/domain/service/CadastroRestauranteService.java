@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.api.algafood.domain.exception.EntidadeEmUsoException;
 import com.api.algafood.domain.exception.RestauranteNaoEncontradoException;
+import com.api.algafood.domain.model.FormaPagamento;
 import com.api.algafood.domain.model.Restaurante;
 import com.api.algafood.domain.repository.RestauranteRepository;
 
@@ -24,6 +25,9 @@ public class CadastroRestauranteService {
 	
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;
+	
+	@Autowired
+	private CadastroFormaPagamentoService cadastroFormaPagamentoService; 
 	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
@@ -62,13 +66,27 @@ public class CadastroRestauranteService {
 	public void inativar(Long restauranteId) {
 		Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 		restauranteAtual.inativar();
-		
-		//não precisa fazer restauranteRepository.save(restaurante), por causa do contexto de persistencia do JPA
 	}
 	
 	public Restaurante buscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId).orElseThrow(
 				() -> new RestauranteNaoEncontradoException(restauranteId));
+	}
+	
+	@Transactional
+	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		restaurante.removerFormaPagamento(formaPagamento);
+		
+	}
+	
+	@Transactional
+	public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		restaurante.adicionarFormaPagamento(formaPagamento);
+		
 	}
 	
 }

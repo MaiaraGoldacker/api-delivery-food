@@ -3,7 +3,9 @@ package com.api.algafood.domain.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -20,20 +22,11 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.api.algafood.validation.Groups;
-import com.api.algafood.validation.TaxaFrete;
 import com.api.algafood.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
                           //se aqui for zero        verifica descrição       descrição que será procurada
@@ -77,7 +70,7 @@ public class Restaurante {
 	@JoinTable(name = "restaurante_forma_pagamento",
 	joinColumns= @JoinColumn(name = "restaurante_id"), //coluna da relação manytomany da classe q está sendo criada o relacionamento
 	inverseJoinColumns = @JoinColumn(name= "forma_pagamento_id")) //coluna da tabela inversa
-	private List<FormaPagamento> formasPagamento = new ArrayList<>();
+	private Set<FormaPagamento> formasPagamento = new HashSet<>(); //Conjunto que não aceita elementos duplicados
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produto = new ArrayList<>();
@@ -89,5 +82,13 @@ public class Restaurante {
 	
 	public void inativar() {
 		setAtivo(false);
+	}
+	
+	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().remove(formaPagamento);
+	}
+	
+	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().add(formaPagamento);
 	}
 }
