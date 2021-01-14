@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.algafood.assembler.UsuarioModelAssembler;
 import com.api.algafood.assembler.UsuarioModelDisassembler;
-import com.api.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.api.algafood.domain.exception.NegocioException;
+import com.api.algafood.domain.exception.UsuarioNaoEncontradoException;
 import com.api.algafood.domain.repository.UsuarioRepository;
 import com.api.algafood.domain.service.CadastroUsuarioService;
 import com.api.algafood.model.UsuarioModel;
@@ -61,7 +61,7 @@ public class UsuarioController {
 			usuarioModelDisassembler.copyToDomainObject(usuarioInput, usuarioAtual);
 		
 			return  usuarioModelAssembler.toUpdateModel(cadastroUsuarioService.salvar(usuarioAtual));
-		} catch(EstadoNaoEncontradoException e) {
+		} catch(UsuarioNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
@@ -73,7 +73,7 @@ public class UsuarioController {
 			return 
 					usuarioModelAssembler.toUpdateModel(
 					cadastroUsuarioService.salvar( usuarioModelDisassembler.toDomainModel(usuarioInput)));
-		} catch(EstadoNaoEncontradoException e) {
+		} catch(UsuarioNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}

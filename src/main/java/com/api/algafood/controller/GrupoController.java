@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.algafood.assembler.GrupoModelAssembler;
 import com.api.algafood.assembler.GrupoModelDisassembler;
-import com.api.algafood.domain.exception.EstadoNaoEncontradoException;
+import com.api.algafood.domain.exception.GrupoNaoEncontradoException;
 import com.api.algafood.domain.exception.NegocioException;
 import com.api.algafood.domain.repository.GrupoRepository;
 import com.api.algafood.domain.service.CadastroGrupoService;
@@ -59,7 +59,7 @@ public class GrupoController {
 			grupoModelDisassembler.copyToDomainObject(grupoInput, grupoAtual);
 		
 			return  grupoModelAssembler.toModel(cadastroGrupoService.salvar(grupoAtual));
-		} catch(EstadoNaoEncontradoException e) {
+		} catch(GrupoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
@@ -71,7 +71,7 @@ public class GrupoController {
 			return 
 					grupoModelAssembler.toModel(
 					cadastroGrupoService.salvar( grupoModelDisassembler.toDomainModel(grupoInput)));
-		} catch(EstadoNaoEncontradoException e) {
+		} catch(GrupoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}

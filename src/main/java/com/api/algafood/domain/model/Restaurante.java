@@ -73,7 +73,7 @@ public class Restaurante {
 	private Set<FormaPagamento> formasPagamento = new HashSet<>(); //Conjunto que não aceita elementos duplicados
 	
 	@OneToMany(mappedBy = "restaurante")
-	private List<Produto> produto = new ArrayList<>();
+	private List<Produto> produtos = new ArrayList<>();
 	
 	
 	public void ativar() {
