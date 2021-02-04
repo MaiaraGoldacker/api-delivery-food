@@ -66,3 +66,14 @@ insert into grupo (id, nome) values (1, 'Secretária');
 insert into grupo (id, nome) values (2, 'Diretor');
 
 insert into usuario (id, nome, email, senha, data_cadastro) values (1, 'Maiara', 'maiaragoldacker@gmail.com', '123', utc_timestamp);
+
+insert into permissao (id, descricao, nome) values (1, 'TESTE_1', 'TESTE_1');
+insert into permissao (id, descricao, nome) values (2, 'TESTE_2', 'TESTE_2');
+insert into permissao (id, descricao, nome) values (3, 'TESTE_3', 'TESTE_3');
+
+insert into grupo_permissao(grupo_id, permissao_id) values (1, 1);
+insert into grupo_permissao(grupo_id, permissao_id) values (1, 2);
+insert into grupo_permissao(grupo_id, permissao_id) values (1, 3);
+
+insert into grupo_permissao(grupo_id, permissao_id) values (2, 3);
+ 

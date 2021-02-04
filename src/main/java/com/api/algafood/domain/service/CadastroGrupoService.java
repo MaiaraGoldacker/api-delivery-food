@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.api.algafood.domain.exception.GrupoNaoEncontradoException;
 import com.api.algafood.domain.exception.EntidadeEmUsoException;
 import com.api.algafood.domain.model.Grupo;
+import com.api.algafood.domain.model.Permissao;
 import com.api.algafood.domain.repository.GrupoRepository;
 
 @Service
@@ -18,6 +19,9 @@ public class CadastroGrupoService {
 
 	@Autowired
 	private GrupoRepository grupoRepository;
+	
+	@Autowired
+	private CadastroPermissaoService cadastroPermissaoService;
 	
 	@Transactional
 	public Grupo salvar(Grupo grupo) {		
@@ -40,5 +44,19 @@ public class CadastroGrupoService {
 	public Grupo buscarOuFalhar(Long grupoId) {
 		return grupoRepository.findById(grupoId).orElseThrow(
 				() -> new GrupoNaoEncontradoException(grupoId));
+	}
+	
+	@Transactional
+	public void desassociarPermissao(Long grupoId, Long permissaoId) {
+		Grupo grupo = buscarOuFalhar(grupoId);
+		Permissao permissao = cadastroPermissaoService.buscarOuFalhar(permissaoId);
+		grupo.removerPermissao(permissao);		
+	}
+	
+	@Transactional
+	public void associarPermissao(Long grupoId, Long permissaoId) {
+		Grupo grupo = buscarOuFalhar(grupoId);
+		Permissao permissao = cadastroPermissaoService.buscarOuFalhar(permissaoId);
+		grupo.adicionarPermissao(permissao);		
 	}
 }
