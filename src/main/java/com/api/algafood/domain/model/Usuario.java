@@ -50,4 +50,13 @@ public class Usuario {
 	joinColumns= @JoinColumn(name = "usuario_id"),
 	inverseJoinColumns = @JoinColumn(name= "grupo_id"))
 	private List<Grupo> grupos = new ArrayList<>();
+	
+	public boolean removerGrupo(Grupo grupo) {
+		return getGrupos().remove(grupo);
+	}
+	
+	public boolean adicionarGrupo(Grupo grupo) {
+		return getGrupos().add(grupo);
+	}
+	
 }
