@@ -13,6 +13,7 @@ delete from restaurante_forma_pagamento;
 delete from usuario;
 delete from usuario_grupo;
 delete from restaurante_usuario_responsavel;
+delete from pedido;
 
 set foreign_key_checks = 1;
 
@@ -87,3 +88,9 @@ insert into usuario_grupo(usuario_id, grupo_id) values (2, 2);
 insert into restaurante_usuario_responsavel(restaurante_id, usuario_id) values (1, 1);
 insert into restaurante_usuario_responsavel(restaurante_id, usuario_id) values (2, 1);
 insert into restaurante_usuario_responsavel(restaurante_id, usuario_id) values (2, 2);
+
+insert into pedido (id, restaurante_id, usuario_cliente_id, forma_pagamento_id, endereco_cidade_id, endereco_cep, 
+    endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
+    status, data_criacao, subtotal, taxa_frete, valor_total)
+values (1, 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
+'CRIADO', utc_timestamp, 298.90, 10, 308.90);

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +29,7 @@ public class Pedido {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	private String codigo;
+	//private String codigo;
 	private BigDecimal subtotal;
 	private BigDecimal taxaFrete;
 	private BigDecimal valorTotal;
@@ -42,6 +44,7 @@ public class Pedido {
 	@Embedded
 	private Endereco enderecoEntrega;
 	
+	@Enumerated(EnumType.STRING)
 	private StatusPedido status;
 	
 	@OneToMany(mappedBy = "pedido")
