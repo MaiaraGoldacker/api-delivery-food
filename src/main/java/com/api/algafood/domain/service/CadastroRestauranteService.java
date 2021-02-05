@@ -1,5 +1,7 @@
 package com.api.algafood.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -64,6 +66,18 @@ public class CadastroRestauranteService {
 		restauranteAtual.ativar();
 		
 		//não precisa fazer restauranteRepository.save(restaurante), por causa do contexto de persistencia do JPA
+	}
+	
+	
+	@Transactional
+	public void ativar(List<Long> restaurantesId) {
+		//chama método para cada elemento da lista
+		restaurantesId.forEach(this::ativar);
+	}
+	
+	@Transactional
+	public void inativar(List<Long> restaurantesId) {
+		restaurantesId.forEach(this::inativar);
 	}
 	
 	@Transactional

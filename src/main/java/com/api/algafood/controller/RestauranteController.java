@@ -21,6 +21,7 @@ import com.api.algafood.assembler.RestauranteModelDisassembler;
 import com.api.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.api.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.api.algafood.domain.exception.NegocioException;
+import com.api.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.api.algafood.domain.repository.RestauranteRepository;
 import com.api.algafood.domain.service.CadastroRestauranteService;
 import com.api.algafood.model.RestauranteModel;
@@ -85,6 +86,28 @@ public class RestauranteController {
 	public void remover(@PathVariable Long restauranteId){
 		cadastroRestauranteService.excluir(restauranteId);
 	}
+	
+	
+	@PutMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void ativarMultiplos(@RequestBody List<Long> restaurantesId) {
+		try {
+			cadastroRestauranteService.ativar(restaurantesId);
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
+	}
+	
+	@DeleteMapping("/ativacoes")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void inativarMultiplos(@RequestBody List<Long> restaurantesId) {
+		try {
+			cadastroRestauranteService.inativar(restaurantesId);
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e); //necessário para retornar 400 - erro correto, que é um status de erro do cliente, 404 é não encontrado 
+		}
+	}
+	
 	
 	@GetMapping("/taxa")
 	public List<RestauranteModel> restaurantesPorTaxaFrete(
