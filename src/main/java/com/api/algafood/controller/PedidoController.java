@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.algafood.assembler.PedidoModelAssembler;
+import com.api.algafood.assembler.PedidoResumoModelAssembler;
 import com.api.algafood.domain.exception.NegocioException;
 import com.api.algafood.domain.exception.PedidoNaoEncontradoException;
 import com.api.algafood.domain.repository.PedidoRepository;
 import com.api.algafood.domain.service.CadastroPedidoService;
 import com.api.algafood.model.PedidoModel;
+import com.api.algafood.model.PedidoResumoModel;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -27,10 +29,13 @@ public class PedidoController {
 	
 	@Autowired
 	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PedidoResumoModelAssembler pedidoResumoModelAssembler;
 
 	@GetMapping
-	public List<PedidoModel> Listar(){
-		return  pedidoModelAssembler.toCollectionModel(pedidoRepository.findAll());
+	public List<PedidoResumoModel> Listar(){
+		return  pedidoResumoModelAssembler.toCollectionModel(pedidoRepository.findAll());
 	}
 	
 	@GetMapping("/{pedidoId}")
