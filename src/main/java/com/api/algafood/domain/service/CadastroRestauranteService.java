@@ -10,6 +10,7 @@ import com.api.algafood.domain.exception.EntidadeEmUsoException;
 import com.api.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.api.algafood.domain.model.FormaPagamento;
 import com.api.algafood.domain.model.Restaurante;
+import com.api.algafood.domain.model.Usuario;
 import com.api.algafood.domain.repository.RestauranteRepository;
 
 @Service
@@ -27,7 +28,10 @@ public class CadastroRestauranteService {
 	private CadastroCidadeService cadastroCidadeService;
 	
 	@Autowired
-	private CadastroFormaPagamentoService cadastroFormaPagamentoService; 
+	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
+	
+	@Autowired
+	private CadastroUsuarioService cadastroUsuarioService; 
 	
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
@@ -97,6 +101,20 @@ public class CadastroRestauranteService {
 	public void fechar(Long restauranteId) {
 		Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 		restauranteAtual.fechar();
+	}
+	
+	@Transactional
+	public void desassociarUsuario(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+		restaurante.removerUsuario(usuario);		
+	}
+	
+	@Transactional
+	public void associarUsuario(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+		restaurante.adicionarUsuario(usuario);		
 	}
 	
 }

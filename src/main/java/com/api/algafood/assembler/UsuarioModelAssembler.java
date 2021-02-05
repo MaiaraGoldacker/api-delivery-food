@@ -1,12 +1,12 @@
 package com.api.algafood.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.api.algafood.domain.model.Usuario;
 import com.api.algafood.model.UsuarioModel;
 import com.api.algafood.model.input.UsuarioUpdateModel;
@@ -25,7 +25,7 @@ public class UsuarioModelAssembler {
 		return modelMapper.map(usuario, UsuarioUpdateModel.class);
 	}
 	
-	public List<UsuarioModel> toCollectionModel(List<Usuario> usuarios){
+	public List<UsuarioModel> toCollectionModel(Collection<Usuario> usuarios){
 		return usuarios.stream()
 				.map(usuario -> toModel(usuario))
 				.collect(Collectors.toList());
@@ -36,4 +36,5 @@ public class UsuarioModelAssembler {
 				.map(usuario -> toUpdateModel(usuario))
 				.collect(Collectors.toList());
 	}
+	
 }

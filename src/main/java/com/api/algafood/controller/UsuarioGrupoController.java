@@ -11,14 +11,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.api.algafood.assembler.FormaPagamentoModelAssembler;
 import com.api.algafood.assembler.GrupoModelAssembler;
-import com.api.algafood.domain.model.Restaurante;
 import com.api.algafood.domain.model.Usuario;
-import com.api.algafood.domain.service.CadastroRestauranteService;
 import com.api.algafood.domain.service.CadastroUsuarioService;
-import com.api.algafood.model.FormaPagamentoModel;
 import com.api.algafood.model.GrupoModel;
 
 @RestController

@@ -74,6 +74,12 @@ public class Restaurante {
 	inverseJoinColumns = @JoinColumn(name= "forma_pagamento_id")) //coluna da tabela inversa
 	private Set<FormaPagamento> formasPagamento = new HashSet<>(); //Conjunto que não aceita elementos duplicados
 	
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel",
+	joinColumns= @JoinColumn(name = "restaurante_id"),
+	inverseJoinColumns = @JoinColumn(name= "usuario_id"))
+	private Set<Usuario> usuarios = new HashSet<>();
+	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
 	
@@ -100,5 +106,13 @@ public class Restaurante {
 	
 	public void fechar() {
 		setAberto(false);
+	}
+	
+	public boolean removerUsuario(Usuario usuario) {
+		return getUsuarios().remove(usuario);
+	}
+	
+	public boolean adicionarUsuario(Usuario usuario) {
+		return getUsuarios().add(usuario);
 	}
 }
