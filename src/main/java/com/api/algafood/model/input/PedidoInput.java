@@ -31,24 +31,4 @@ public class PedidoInput {
 	@Size(min = 1)
 	@NotNull
 	private List<ItemPedidoInput> itens = new ArrayList<>();
-	
-	/*
-	 * 
-	 * POST pedidos/
-obrigatorios
-restaurante{id}
-formapagto{id}
-enderecoEntrega{completo, + cidade{id}}
-itensPedido {produtoId, quantidade, observacao} SizeMin1
-
-cliente fixo de id 1
-CALCULAR VALORES no pedido
-
-validação
-Forma de pagto '' não é aceita por esse restaurante
-Nao existe um cadastro de produto com codigo 1 para restaurante de codigo 2
-
-	 * 
-	 */
-
 }
