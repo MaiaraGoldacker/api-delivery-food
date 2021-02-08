@@ -77,9 +77,7 @@ public class PedidoController {
 			Usuario usuario = cadastroUsuarioService.buscarOuFalhar(1L);
 			pedido.setCliente(usuario);
 			return pedidoModelAssembler.toModel(cadastroPedidoService.emitirPedido(pedido));
-				
-			/*return pedidoModelAssembler.toModel(cadastroPedidoService.salvar(
-					pedidoInputDisassembler.toDomainModel(pedidoInput)));*/
+
 		} catch(PedidoNaoEncontradoException | RestauranteNaoEncontradoException | FormaPagamentoNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.api.algafood.domain.exception.NegocioException;
 import com.api.algafood.domain.exception.PedidoNaoEncontradoException;
 import com.api.algafood.domain.model.FormaPagamento;
 import com.api.algafood.domain.model.ItemPedido;
@@ -40,14 +41,23 @@ public class CadastroPedidoService {
 	}
 		
 	private Pedido validarPedido(Pedido pedido) {
-		cadastroRestauranteService.buscarOuFalhar(pedido.getRestaurante().getId());
-		cadastroFormaPagamentoService.buscarOuFalhar(pedido.getFormaPagamento().getId());
+		Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(pedido.getRestaurante().getId());
+		FormaPagamento formaPagto = cadastroFormaPagamentoService.buscarOuFalhar(pedido.getFormaPagamento().getId());
 		
 		for(ItemPedido itempedido : pedido.getItens()) {
 			Produto produto = cadastroProdutoService.buscarOuFalhar(pedido.getRestaurante().getId(), itempedido.getProduto().getId());
+			itempedido.setProduto(produto);
 			
 		}
-
+		pedido.setRestaurante(restaurante);
+		
+		if(!restaurante.getFormasPagamento().contains(formaPagto)) {
+			throw new NegocioException(String.format("Forma de pagamento '%s' não é aceita por esse restaurante.",
+					formaPagto.getDescricao()));
+		} else {		
+			pedido.setFormaPagamento(formaPagto);
+		}
+		
 		return pedido;
 	}
 	
@@ -55,14 +65,11 @@ public class CadastroPedidoService {
 		
 		BigDecimal valorSubtotal = BigDecimal.ZERO;
 		for(ItemPedido itempedido : pedido.getItens()) {
-			
-			Produto produto = cadastroProdutoService.buscarOuFalhar(pedido.getRestaurante().getId(), itempedido.getProduto().getId());
-			itempedido.setPrecoUnitario(produto.getPreco());
+			itempedido.setPrecoUnitario(itempedido.getProduto().getPreco());
 			itempedido.setPrecoTotal(
 					itempedido.getPrecoUnitario().multiply(BigDecimal.valueOf(itempedido.getQuantidade()))
 					);
-			
-			
+						
 			valorSubtotal  = valorSubtotal.add(itempedido.getPrecoTotal());
 		}
 		
@@ -81,7 +88,7 @@ public class CadastroPedidoService {
 	
 	@Transactional
 	public Pedido emitirPedido(Pedido pedido) {
-		validarPedido(pedido);
+		pedido = validarPedido(pedido);
 		pedido = calcularPedido(pedido);
 		pedido.setStatus(StatusPedido.CRIADO);
 		salvar(pedido);

@@ -48,13 +48,6 @@ validação
 Forma de pagto '' não é aceita por esse restaurante
 Nao existe um cadastro de produto com codigo 1 para restaurante de codigo 2
 
--------------------------------
-tratar exception
-nao pode salvar um dected item pedido
-
-adicionar ajuste no modelMapperConf
-conversao de -skyp ItemPedido:: setId
-------------------------------
 	 * 
 	 */
 
