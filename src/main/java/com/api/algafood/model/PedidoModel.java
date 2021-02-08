@@ -23,7 +23,7 @@ public class PedidoModel {
 	private OffsetDateTime dataCancelamento;
 	private EnderecoModel enderecoEntrega;
 	private StatusPedido status;
-	private List<ItemPedidoModel> itens = new ArrayList();
+	private List<ItemPedidoModel> itens = new ArrayList<>();
 	private RestauranteResumoModel restaurante;
 	private FormaPagamentoModel formaPagamento;
 	private UsuarioUpdateModel cliente;
