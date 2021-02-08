@@ -12,7 +12,6 @@ import com.api.algafood.domain.model.ItemPedido;
 import com.api.algafood.domain.model.Pedido;
 import com.api.algafood.domain.model.Produto;
 import com.api.algafood.domain.model.Restaurante;
-import com.api.algafood.domain.model.StatusPedido;
 import com.api.algafood.domain.repository.PedidoRepository;
 
 @Service
@@ -90,7 +89,7 @@ public class CadastroPedidoService {
 	public Pedido emitirPedido(Pedido pedido) {
 		pedido = validarPedido(pedido);
 		pedido = calcularPedido(pedido);
-		pedido.setStatus(StatusPedido.CRIADO);
+		pedido.criar();
 		salvar(pedido);
 		return pedido;
 	}
