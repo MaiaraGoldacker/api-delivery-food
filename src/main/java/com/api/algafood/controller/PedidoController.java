@@ -57,10 +57,10 @@ public class PedidoController {
 		return  pedidoResumoModelAssembler.toCollectionModel(pedidoRepository.findAll());
 	}
 	
-	@GetMapping("/{pedidoId}")
-	public PedidoModel buscar(@PathVariable Long pedidoId) {
+	@GetMapping("/{codigoPedido}")
+	public PedidoModel buscar(@PathVariable String codigoPedido) {
 		try {
-			return pedidoModelAssembler.toModel(cadastroPedidoService.buscarOuFalhar(pedidoId));
+			return pedidoModelAssembler.toModel(cadastroPedidoService.buscarOuFalhar(codigoPedido));
 		} catch (PedidoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
