@@ -26,6 +26,9 @@ import com.api.algafood.domain.repository.RestauranteRepository;
 import com.api.algafood.domain.service.CadastroRestauranteService;
 import com.api.algafood.model.RestauranteModel;
 import com.api.algafood.model.input.RestauranteInput;
+import com.api.algafood.model.view.RestauranteView;
+import com.api.algafood.model.view.RestauranteView.ApenasNome;
+import com.fasterxml.jackson.annotation.JsonView;
 
 
 @RestController
@@ -45,7 +48,7 @@ public class RestauranteController {
 	private RestauranteModelDisassembler restauranteModelDisassembler;
 
 	@GetMapping
-	public List<RestauranteModel> Listar(){
+	public List<RestauranteModel> listar(){
 		return restauranteModelAssembler.toCollectionModel(restauranteRepository.findAll());
 	}
 	
@@ -79,6 +82,12 @@ public class RestauranteController {
 		} catch(CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
+	}
+	
+	@JsonView(ApenasNome.class)
+	@GetMapping(params = "projecao=apenas-nome")
+	public List<RestauranteModel> listarApenasNomes(){
+		return listar();
 	}
 	
 	@DeleteMapping("/{restauranteId}")
