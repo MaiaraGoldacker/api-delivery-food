@@ -55,7 +55,7 @@ insert into restaurante (id, nome, taxa_frete, cozinha_id, data_cadastro, data_a
 insert into restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) values (1,1), (2,1);
 
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Porco com molho agridoce', 'Deliciosa carne suína ao molho especial', 78.90, 1, 1);
-insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Camarão tailandês', '16 camarões grandes ao molho picante', 110, 1, 1);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Camarão tailandês', '16 camarões grandes ao molho picante', 110, 0, 1);
 
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Salada picante com carne grelhada', 'Salada de folhas com cortes finos de carne bovina grelhada e nosso molho especial de pimenta vermelha', 87.20, 1, 2);
 
@@ -64,7 +64,7 @@ insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('T-B
 
 insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Sanduíche X-Tudo', 'Sandubão com muito queijo, hamburger bovino, bacon, ovo, salada e maionese', 19, 1, 5);
 
-insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Espetinho de Cupim', 'Acompanha farinha, mandioca e vinagrete', 8, 1, 6);
+insert into produto (nome, descricao, preco, ativo, restaurante_id) values ('Espetinho de Cupim', 'Acompanha farinha, mandioca e vinagrete', 8, 0, 1);
 
 insert into grupo (id, nome) values (1, 'Secretária');
 insert into grupo (id, nome) values (2, 'Diretor');
