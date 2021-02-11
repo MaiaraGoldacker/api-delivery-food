@@ -27,6 +27,8 @@ import com.api.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.api.algafood.domain.model.Pedido;
 import com.api.algafood.domain.model.Usuario;
 import com.api.algafood.domain.repository.PedidoRepository;
+import com.api.algafood.domain.repository.filter.PedidoFilter;
+import com.api.algafood.domain.repository.specs.PedidoSpecs;
 import com.api.algafood.domain.service.CadastroPedidoService;
 import com.api.algafood.domain.service.CadastroUsuarioService;
 import com.api.algafood.model.PedidoModel;
@@ -58,8 +60,8 @@ public class PedidoController {
 	private CadastroUsuarioService cadastroUsuarioService;
 
 	@GetMapping
-	public List<PedidoResumoModel> listar(){
-		return  pedidoResumoModelAssembler.toCollectionModel(pedidoRepository.findAll());
+	public List<PedidoResumoModel> pesquisar(PedidoFilter filtro){
+		return  pedidoResumoModelAssembler.toCollectionModel(pedidoRepository.findAll(PedidoSpecs.usandoFIltro(filtro)));
 	}
 	
 	/*@GetMapping
