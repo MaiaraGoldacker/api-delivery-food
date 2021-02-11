@@ -57,12 +57,12 @@ public class PedidoController {
 	@Autowired
 	private CadastroUsuarioService cadastroUsuarioService;
 
-	/*@GetMapping
+	@GetMapping
 	public List<PedidoResumoModel> listar(){
 		return  pedidoResumoModelAssembler.toCollectionModel(pedidoRepository.findAll());
-	}*/
+	}
 	
-	@GetMapping
+	/*@GetMapping
 	public MappingJacksonValue listar(@RequestParam(required = false) String campos){
 		List<Pedido> pedidos = pedidoRepository.findAll();
 		List<PedidoResumoModel> pedidosModel  = pedidoResumoModelAssembler.toCollectionModel(pedidos);
@@ -76,13 +76,11 @@ public class PedidoController {
 		if(StringUtils.isNotBlank(campos)) {
 			filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(","))); //quebra a string separando por virgulas e colocando em um array
 		}
-		
-		
-		//filterProvider.addFilter("pedidoFilter", SimpleBeanPropertyFilter.filterOutAllExcept("codigo", "valorTotal")); //diz quais os campos o usuario da api quer visualizar
+				
 		pedidosWrapper.setFilters(filterProvider);
 		
 		return pedidosWrapper;  
-	}
+	}*/
 	
 	@GetMapping("/{codigoPedido}")
 	public PedidoModel buscar(@PathVariable String codigoPedido) {

@@ -1,4 +1,4 @@
-package com.api.algafood.core.modelmapper;
+package com.api.algafood.core.config.modelmapper;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

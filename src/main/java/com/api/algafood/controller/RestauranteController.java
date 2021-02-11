@@ -26,7 +26,6 @@ import com.api.algafood.domain.repository.RestauranteRepository;
 import com.api.algafood.domain.service.CadastroRestauranteService;
 import com.api.algafood.model.RestauranteModel;
 import com.api.algafood.model.input.RestauranteInput;
-import com.api.algafood.model.view.RestauranteView;
 import com.api.algafood.model.view.RestauranteView.ApenasNome;
 import com.fasterxml.jackson.annotation.JsonView;
 
