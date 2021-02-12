@@ -1,6 +1,7 @@
 package com.api.algafood.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.algafood.assembler.PedidoInputDisassembler;
 import com.api.algafood.assembler.PedidoModelAssembler;
 import com.api.algafood.assembler.PedidoResumoModelAssembler;
+import com.api.algafood.core.data.PageableTranslator;
 import com.api.algafood.domain.exception.FormaPagamentoNaoEncontradaException;
 import com.api.algafood.domain.exception.NegocioException;
 import com.api.algafood.domain.exception.PedidoNaoEncontradoException;
@@ -60,6 +62,9 @@ public class PedidoController {
 
 	@GetMapping
 	public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable){
+		
+		pageable = traduzirPageable(pageable);
+		
 		Page<Pedido> pedidosPage =  pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
 		List<PedidoResumoModel> pedidoResumoModelList = pedidoResumoModelAssembler.toCollectionModel(pedidosPage.getContent());
 		
@@ -111,5 +116,17 @@ public class PedidoController {
 		} catch(PedidoNaoEncontradoException | RestauranteNaoEncontradoException | FormaPagamentoNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
+	}
+	
+	private Pageable traduzirPageable(Pageable apiPageable) {		
+		//GET / pedidos? sort = nomeCliente
+		//GET / pedidos? sort = cliente.nome
+		var mapeamento = Map.of(
+				"codigo", "codigo",
+				"nomeCliente", "cliente.nome",
+				"restaurante.nome", "restaurante.nome",
+				"valorTotal", "valorTotal"
+				);
+		return PageableTranslator.translate(apiPageable, mapeamento);
 	}
 }
