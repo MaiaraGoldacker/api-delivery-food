@@ -11,15 +11,16 @@ import com.api.algafood.domain.repository.filter.PedidoFilter;
 
 public class PedidoSpecs {
 
-	public static Specification<Pedido> usandoFIltro(PedidoFilter filtro){
+	public static Specification<Pedido> usandoFiltro(PedidoFilter filtro){
 		return (root, query, builder) -> {
 			var predicates = new ArrayList<Predicate>();
-					
-			//evitar vários selects
-			root.fetch("restaurante");
-			root.fetch("restaurante").fetch("cozinha");
-			root.fetch("cliente");
 			
+			if(Pedido.class.equals(query.getResultType())) { //evitar que fetch seja adicionado indevidamento ao realizar a consulta de count no pageable, causando excessão
+				//evitar vários selects
+				root.fetch("restaurante");
+				root.fetch("restaurante").fetch("cozinha");
+				root.fetch("cliente");
+			}
 			
 			//adicionar predicates no arraylist
 			if (filtro.getClienteId() != null) {
