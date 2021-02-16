@@ -1,4 +1,5 @@
-package com.api.algafood.domain.repository.filter;
+package com.api.algafood.domain.filter;
+
 import java.time.OffsetDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -7,12 +8,9 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
-public class PedidoFilter {
+@Setter @Getter
+public class VendaDiariaFilter {
 
-	//propriedades opcionais, com qualquer combinação de filtro E/OU
-	private Long clienteId;
 	private Long restauranteId;
 	
 	@DateTimeFormat(iso = ISO.DATE_TIME) //forçando a formatação da data-hora para esse formato
