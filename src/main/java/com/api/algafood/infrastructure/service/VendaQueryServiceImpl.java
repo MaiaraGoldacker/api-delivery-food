@@ -1,16 +1,18 @@
 package com.api.algafood.infrastructure.service;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Predicate;
 
 import org.springframework.stereotype.Repository;
 
 import com.api.algafood.domain.filter.VendaDiariaFilter;
 import com.api.algafood.domain.model.Pedido;
+import com.api.algafood.domain.model.StatusPedido;
 import com.api.algafood.domain.model.dto.VendaDiaria;
 import com.api.algafood.domain.service.VendaQueryService;
 
@@ -21,27 +23,38 @@ public class VendaQueryServiceImpl implements VendaQueryService {
 	private EntityManager manager;
 
 	@Override
-	public List<VendaDiaria> conultarVendasDiarias(VendaDiariaFilter filtro) {
+	public List<VendaDiaria> conultarVendasDiarias(VendaDiariaFilter filtro,  String timeOffSet) {
 
 		var builder = manager.getCriteriaBuilder();
 		var query = builder.createQuery(VendaDiaria.class); // VendaDiaria.class = tipo de retorno esperado na consulta
 		var root = query.from(Pedido.class);
 
-		var functionDateDataCriacao = builder.function("date", Date.class, root.get("dataCriacao")); // usar uma função do banco de dados(nome da funcao, tipo esperado do retorno, campo da função)
+		var functionconvertTzDataCriacao = builder.function("convert_tz", Date.class, root.get("dataCriacao"), builder.literal("+00:00"), builder.literal(timeOffSet)); // +03:00
+		var functionDateDataCriacao = builder.function("date", Date.class, functionconvertTzDataCriacao); // usar uma função do banco de dados(nome da funcao, tipo esperado do retorno, campo da função)
 
 		var selection = builder.construct(VendaDiaria.class, functionDateDataCriacao, builder.count(root.get("id")),
 				builder.sum(root.get("valorTotal")));
 
-		/*
-		 * select date(p.data_criacao) as data_criacao, count(p.id) as total_vendas,
-		 * sum(p.valor_total) as total_faturado
-		 * 
-		 * from pedido group by date(p.data_criacao)
-		 */
-		//root.get(status) adicionar predicate fixo (where p.status IN)-> status = CONFIRMADO, ENTREGUE
-		
+		var predicates = new ArrayList<Predicate>();
+		if (filtro.getRestauranteId() != null) {
+		    predicates.add(builder.equal(root.get("restaurante"), filtro.getRestauranteId()));
+		}
+		    
+		if (filtro.getDataCriacaoInicio() != null) {
+		    predicates.add(builder.greaterThanOrEqualTo(root.get("dataCriacao"), 
+		            filtro.getDataCriacaoInicio()));
+		}
+
+		if (filtro.getDataCriacaoFim() != null) {
+		    predicates.add(builder.lessThanOrEqualTo(root.get("dataCriacao"), 
+		            filtro.getDataCriacaoFim()));
+		}
+		    
+		predicates.add(root.get("status").in(
+		        StatusPedido.CONFIRMADO, StatusPedido.ENTREGUE));
+
 		query.select(selection);
-		//query.where() array.predicates
+		query.where(predicates.toArray(new Predicate[0]));
 		query.groupBy(functionDateDataCriacao);
 		return manager.createQuery(query).getResultList();
 	}

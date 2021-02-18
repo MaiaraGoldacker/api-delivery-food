@@ -95,4 +95,4 @@ insert into pedido (id, codigo, restaurante_id, usuario_cliente_id, forma_pagame
     endereco_logradouro, endereco_numero, endereco_complemento, endereco_bairro,
     status, data_criacao, subtotal, taxa_frete, valor_total)
 values (1,'babad7a1-6acb-11eb-9175-d09466bfafd8', 1, 1, 1, 1, '38400-000', 'Rua Floriano Peixoto', '500', 'Apto 801', 'Brasil',
-'CRIADO', utc_timestamp, 298.90, 10, 308.90);
+'ENTREGUE', utc_timestamp, 298.90, 10, 308.90);
