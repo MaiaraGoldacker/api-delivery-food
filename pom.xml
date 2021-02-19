@@ -81,6 +81,16 @@
     		<artifactId>squiggly-filter-jackson</artifactId>
    	 		<version>${squiggly.version}</version>
 		</dependency>
+		<dependency>
+  			<groupId>net.sf.jasperreports</groupId>
+  			<artifactId>jasperreports</artifactId>
+  			<version>6.16.0</version>
+		</dependency>
+		<dependency>
+  			<groupId>net.sf.jasperreports</groupId>
+  			<artifactId>jasperreports-functions</artifactId>
+  			<version>6.16.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
