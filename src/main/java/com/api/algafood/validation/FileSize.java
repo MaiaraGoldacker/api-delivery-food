@@ -12,21 +12,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
-import javax.validation.OverridesAttribute;
 import javax.validation.Payload;
-import javax.validation.constraints.PositiveOrZero;
 
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = { FileSizeValidator.class	})
-@PositiveOrZero
-public @interface TaxaFrete {
+@Constraint(validatedBy = { FileSizeValidator.class})
+public @interface FileSize {
 
-	@OverridesAttribute(constraint = PositiveOrZero.class, name = "message") //substituindo  a mensagem da anotation @PositiveOrZero, pela mensagem que criamos para taxa frete
-	String message() default "{TaxaFrete.invalida}";
+	String message() default "tamanho do arquivo inválido";
 
 	Class<?>[] groups() default { };
 
 	Class<? extends Payload>[] payload() default { };
-
+	
+	String max();
 }
