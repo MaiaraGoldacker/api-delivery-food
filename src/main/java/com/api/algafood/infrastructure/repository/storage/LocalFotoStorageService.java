@@ -17,6 +17,12 @@ public class LocalFotoStorageService implements FotoStorageService{
 	@Value("${algafood.storage.local.diretorio-fotos}")
 	private Path diretorioFotos;
 	
+	private Path getArquivoPath(String nomeArquivo) {
+		//concatenar Path = resolve
+		 return diretorioFotos.resolve(Path.of(nomeArquivo));
+	}
+
+	
 	@Override
 	public void armazenar(NovaFoto novaFoto) {
 		Path arquivoPath = getArquivoPath(novaFoto.getNomeArquivo());
@@ -28,9 +34,15 @@ public class LocalFotoStorageService implements FotoStorageService{
 		}	
 	}
 	
-	private Path getArquivoPath(String nomeArquivo) {
-		//concatenar Path = resolve
-		 return diretorioFotos.resolve(Path.of(nomeArquivo));
+	@Override
+	public void remover(String nomeArquivo) {
+		Path arquivoPath = getArquivoPath(nomeArquivo);
+		
+		try {
+			Files.deleteIfExists(arquivoPath);
+		} catch (Exception e) {
+			throw new StorageException("Não foi possível excluir arquivo", e);
+		}
 	}
 
 }
