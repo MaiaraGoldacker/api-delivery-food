@@ -30,6 +30,7 @@ public interface FotoStorageService {
 	@Getter
 	class NovaFoto{
 		private String nomeArquivo;
+		private String contentType;
 		private InputStream inputStream; //Não usar multipartfile, pois esse tipo está ligado a protocolo http/web e nós já estamos em uma camada interna, mais de domínio.
 	}
 }

@@ -13,7 +13,7 @@ import com.api.algafood.core.storage.StorageProperties;
 import com.api.algafood.domain.exception.StorageException;
 import com.api.algafood.domain.service.FotoStorageService;
 
-@Service
+//@Service
 public class LocalFotoStorageService implements FotoStorageService{
 
 	@Autowired
