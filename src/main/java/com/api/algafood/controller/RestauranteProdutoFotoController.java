@@ -30,7 +30,10 @@ import com.api.algafood.domain.model.Produto;
 import com.api.algafood.domain.service.CadastroProdutoService;
 import com.api.algafood.domain.service.CatalogoFotoProdutoService;
 import com.api.algafood.domain.service.FotoStorageService;
+import com.api.algafood.domain.service.FotoStorageService.FotoRecuperada;
+import com.api.algafood.domain.service.FotoStorageService.FotoRecuperada.FotoRecuperadaBuilder;
 import com.api.algafood.model.input.FotoProdutoInput;
+import com.google.common.net.HttpHeaders;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -81,13 +84,21 @@ public class RestauranteProdutoFotoController {
 			List<MediaType> mediaTypesAceitas =  MediaType.parseMediaTypes(acceptHeader);
 		
 			verificarCompatibilidadeMediaType(mediaTypeFoto, mediaTypesAceitas);
+				
 		
+			FotoRecuperada fotoRecuperada = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
 		
-			InputStream inputStream = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
-		
-			return ResponseEntity.ok()
-					.contentType(mediaTypeFoto)
-					.body(new InputStreamResource(inputStream));
+			if (fotoRecuperada.temUrl()) {			
+				
+				return ResponseEntity
+						.status(HttpStatus.FOUND)
+						.header(HttpHeaders.LOCATION, fotoRecuperada.getUrl()).build();
+			} else {
+			
+				return ResponseEntity.ok()
+						.contentType(mediaTypeFoto)
+						.body(new InputStreamResource(fotoRecuperada.getInputStream()));
+			}
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
